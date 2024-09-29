@@ -14,7 +14,8 @@ from ...modules.diffusionmodules.openaimodel import ResBlock, timestep_embedding
 from ...modules.video_attention import VideoTransformerBlock
 from ...util import partialclass
 
-
+import comfy.ops
+ops = comfy.ops.manual_cast
 class VideoResBlock(ResnetBlock):
     def __init__(
         self,
@@ -124,9 +125,9 @@ class VideoBlock(AttnBlock):
 
         time_embed_dim = self.in_channels * 4
         self.video_time_embed = torch.nn.Sequential(
-            torch.nn.Linear(self.in_channels, time_embed_dim),
+            ops.Linear(self.in_channels, time_embed_dim),
             torch.nn.SiLU(),
-            torch.nn.Linear(time_embed_dim, self.in_channels),
+            ops.Linear(time_embed_dim, self.in_channels),
         )
 
         self.merge_strategy = merge_strategy
@@ -194,9 +195,9 @@ class MemoryEfficientVideoBlock(MemoryEfficientAttnBlock):
 
         time_embed_dim = self.in_channels * 4
         self.video_time_embed = torch.nn.Sequential(
-            torch.nn.Linear(self.in_channels, time_embed_dim),
+            ops.Linear(self.in_channels, time_embed_dim),
             torch.nn.SiLU(),
-            torch.nn.Linear(time_embed_dim, self.in_channels),
+            ops.Linear(time_embed_dim, self.in_channels),
         )
 
         self.merge_strategy = merge_strategy

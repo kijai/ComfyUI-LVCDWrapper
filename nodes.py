@@ -105,6 +105,7 @@ class LVCDSampler:
                 "overlap": ("INT", {"default": 4, "min": 1, "max": 100, "step": 1}),
                 "prev_attn_steps": ("INT", {"default": 25, "min": 1, "max": 100, "step": 1}),
                 "seed": ("INT", {"default": 123, "min": 0, "max": 2**32, "step": 1}),
+                "keep_model_loaded": ("BOOLEAN", {"default": False}),
             },
         }
 
@@ -114,7 +115,7 @@ class LVCDSampler:
     CATEGORY = "ComfyUI-LVCDWrapper"
 
     def loadmodel(self, LVCD_pipe, ref_images, sketch_images, num_frames, num_steps, fps_id, motion_bucket_id, cond_aug, overlap, 
-                  prev_attn_steps, seed):
+                  prev_attn_steps, seed, keep_model_loaded):
         
         device = mm.get_torch_device()
         offload_device = mm.unet_offload_device()
@@ -150,7 +151,12 @@ class LVCDSampler:
         arg.motion_bucket_id = motion_bucket_id
         arg.cond_aug = cond_aug
 
+        model.to(device)
+        model.control_model.to(device)
         samples = sample_video(model, device, inp, arg, verbose=True)
+        if not keep_model_loaded:
+            model.to(offload_device)
+            model.control_model.to(offload_device)
 
         return (LVCD_pipe, samples)
     
@@ -186,7 +192,9 @@ class LVCDDecoder:
         arg.decoding_olap = decoding_olap
         arg.decoding_first = decoding_first
 
+        model.first_stage_model.to(device)
         frames = decode_video(model, device, samples, arg)
+        model.first_stage_model.to(offload_device)
 
         min_value = frames.min()
         max_value = frames.max()

@@ -22,7 +22,8 @@ from ...modules.diffusionmodules.util import (extract_into_tensor,
 from ...modules.distributions.distributions import DiagonalGaussianDistribution
 from ...util import (append_dims, autocast, count_params, default,
                      disabled_train, expand_dims_like, instantiate_from_config)
-
+import comfy.ops
+ops = comfy.ops.manual_cast
 
 class AbstractEmbModel(nn.Module):
     def __init__(self):
@@ -787,7 +788,7 @@ class SpatialRescaler(nn.Module):
             print(
                 f"Spatial Rescaler mapping from {in_channels} to {out_channels} channels after resizing."
             )
-            self.channel_mapper = nn.Conv2d(
+            self.channel_mapper = ops.Conv2d(
                 in_channels,
                 out_channels,
                 kernel_size=kernel_size,

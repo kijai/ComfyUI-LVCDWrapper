@@ -18,6 +18,8 @@ from ..util import (default, get_nested_attribute, get_obj_from_str,
 
 logpy = logging.getLogger(__name__)
 
+import comfy.ops
+ops = comfy.ops.manual_cast
 
 class AbstractAutoencoder(pl.LightningModule):
     """
@@ -451,12 +453,12 @@ class AutoencodingEngineLegacy(AutoencodingEngine):
             },
             **kwargs,
         )
-        self.quant_conv = torch.nn.Conv2d(
+        self.quant_conv = ops.Conv2d(
             (1 + ddconfig["double_z"]) * ddconfig["z_channels"],
             (1 + ddconfig["double_z"]) * embed_dim,
             1,
         )
-        self.post_quant_conv = torch.nn.Conv2d(embed_dim, ddconfig["z_channels"], 1)
+        self.post_quant_conv = ops.Conv2d(embed_dim, ddconfig["z_channels"], 1)
         self.embed_dim = embed_dim
 
         self.apply_ckpt(default(ckpt_path, ckpt_engine))

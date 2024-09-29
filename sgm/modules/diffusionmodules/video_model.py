@@ -8,6 +8,8 @@ from ...modules.video_attention import SpatialVideoTransformer
 from ...util import default
 from .util import AlphaBlender
 
+import comfy.ops
+ops = comfy.ops.manual_cast
 
 class VideoResBlock(ResBlock):
     def __init__(
@@ -163,7 +165,7 @@ class VideoUNet(nn.Module):
                 self.label_emb = nn.Embedding(num_classes, time_embed_dim)
             elif self.num_classes == "continuous":
                 print("setting up linear c_adm embedding layer")
-                self.label_emb = nn.Linear(1, time_embed_dim)
+                self.label_emb = ops.Linear(1, time_embed_dim)
             elif self.num_classes == "timestep":
                 self.label_emb = nn.Sequential(
                     Timestep(model_channels),

@@ -7,6 +7,9 @@ from einops import rearrange, repeat
 from packaging import version
 from torch import nn
 
+import comfy.ops
+ops = comfy.ops.manual_cast
+
 logpy = logging.getLogger(__name__)
 
 if version.parse(torch.__version__) >= version.parse("2.0.0"):
@@ -72,12 +75,12 @@ class TemporalAttention_Masked(nn.Module):
         self.scale = dim_head**-0.5
         self.heads = heads
 
-        self.to_q = nn.Linear(query_dim, inner_dim, bias=False)
-        self.to_k = nn.Linear(context_dim, inner_dim, bias=False)
-        self.to_v = nn.Linear(context_dim, inner_dim, bias=False)
+        self.to_q = ops.Linear(query_dim, inner_dim, bias=False)
+        self.to_k = ops.Linear(context_dim, inner_dim, bias=False)
+        self.to_v = ops.Linear(context_dim, inner_dim, bias=False)
 
         self.to_out = nn.Sequential(
-            nn.Linear(inner_dim, query_dim), nn.Dropout(dropout)
+            ops.Linear(inner_dim, query_dim), nn.Dropout(dropout)
         )
         self.backend = backend
 
@@ -173,12 +176,12 @@ class ReferenceAttention(nn.Module):
         self.scale = dim_head**-0.5
         self.heads = heads
 
-        self.to_q = nn.Linear(query_dim, inner_dim, bias=False)
-        self.to_k = nn.Linear(context_dim, inner_dim, bias=False)
-        self.to_v = nn.Linear(context_dim, inner_dim, bias=False)
+        self.to_q = ops.Linear(query_dim, inner_dim, bias=False)
+        self.to_k = ops.Linear(context_dim, inner_dim, bias=False)
+        self.to_v = ops.Linear(context_dim, inner_dim, bias=False)
 
         self.to_out = nn.Sequential(
-            nn.Linear(inner_dim, query_dim), nn.Dropout(dropout)
+            ops.Linear(inner_dim, query_dim), nn.Dropout(dropout)
         )
         self.backend = backend
 
