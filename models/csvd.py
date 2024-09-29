@@ -11,6 +11,9 @@ from ..sgm.modules.diffusionmodules.video_model import VideoResBlock, VideoUNet
 from ..sgm.models.diffusion import DiffusionEngine
 from ..sgm.util import instantiate_from_config, get_obj_from_str
 
+import comfy.ops
+ops = comfy.ops.manual_cast
+
 class ControlledVideoUNet(VideoUNet):
     def __init__(
         self,
@@ -99,7 +102,7 @@ class ControlledVideoUNet(VideoUNet):
                 self.label_emb = nn.Embedding(num_classes, time_embed_dim)
             elif self.num_classes == "continuous":
                 print("setting up linear c_adm embedding layer")
-                self.label_emb = nn.Linear(1, time_embed_dim)
+                self.label_emb = ops.Conv2d(1, time_embed_dim)
             elif self.num_classes == "timestep":
                 self.label_emb = nn.Sequential(
                     Timestep(model_channels),
@@ -562,7 +565,7 @@ class ControlNet(nn.Module):
                 self.label_emb = nn.Embedding(num_classes, time_embed_dim)
             elif self.num_classes == "continuous":
                 print("setting up linear c_adm embedding layer")
-                self.label_emb = nn.Linear(1, time_embed_dim)
+                self.label_emb = ops.Conv2d(1, time_embed_dim)
             elif self.num_classes == "timestep":
                 self.label_emb = nn.Sequential(
                     Timestep(model_channels),
