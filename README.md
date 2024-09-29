@@ -1,4 +1,7 @@
-# ComfyUI wrapper nodes for LVCD: 
+# ComfyUI wrapper nodes for LVCD
+
+
+https://github.com/user-attachments/assets/6d4d5afd-f8b1-499b-8872-d5d2f6929da4
 
 Requires SVD model, seems to work best with the original one, but runs with 1.1 and XT as well, this is loaded normally from ComfyUI/models/checkpoints:
 
