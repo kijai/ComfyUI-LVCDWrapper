@@ -1,11 +1,8 @@
 # @title Sampling function
 import math
-import os
 from typing import Optional
 import copy
 
-import cv2
-import numpy as np
 import torch
 from einops import rearrange, repeat
 
@@ -115,7 +112,7 @@ def decode_video(model, device, latents, arg):
     end = 0
 
     i = 0
-
+    comfy_pbar = ProgressBar(N)
     with torch.autocast('cuda'):
         while end < N:
             start = i * (B - f - olap) + f
@@ -131,6 +128,7 @@ def decode_video(model, device, latents, arg):
             else:
                 outputs = torch.cat([ outputs, out[f+olap:] ])
             i += 1
+            comfy_pbar.update(1)
     
     return outputs
 
@@ -201,6 +199,7 @@ def sample(
     with torch.no_grad():
         with torch.autocast('cuda'):
             # Prepare conditions
+            print("Preparing conditions...")
             c, uc, additional_model_inputs = get_conditioning(
                 model,
                 get_unique_embedder_keys_from_conditioner(model.conditioner),
@@ -212,6 +211,7 @@ def sample(
                 controls=controls, palette=palette, anchor=anchor, first_control=first_control,
                 additional_conditions=additional_conditions,
             )
+            print("conditions prepared")
             # Initial noise
             if x_T is None:
                 randn = torch.randn(shape, dtype=torch.float32, device="cpu").to(device)
@@ -434,29 +434,6 @@ def guidance(denoised, scale, num_frames):
         denoised = rearrange(x_u + scales * (x_c - x_u), "b t ... -> (b t) ...")
     
     return denoised
-
-
-def write_video(output_folder, fps_id, samples):
-    os.makedirs(output_folder, exist_ok=True)
-    video_path = os.path.join(output_folder, f".mp4")
-    writer = cv2.VideoWriter(
-        video_path,
-        cv2.VideoWriter_fourcc(*"MP4V"),
-        fps_id + 1,
-        (samples.shape[-1], samples.shape[-2]),
-    )
-    
-    vid = (
-        (rearrange(samples, "t c h w -> t h w c") * 255)
-        .cpu()
-        .numpy()
-        .astype(np.uint8)
-    )
-    for frame in vid:
-        frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
-        writer.write(frame)
-    writer.release()
-
 
 def seed_everything(seed: int):
     import random, os

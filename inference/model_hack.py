@@ -2,8 +2,47 @@ import torch
 from torch import nn
 from einops import rearrange
 import torch.nn.functional as F
+import warnings
+import platform
+from torch.nn.attention import SDPBackend, sdpa_kernel
+backends = []
 
-from torch.backends.cuda import sdp_kernel
+def get_sdpa_settings():
+    if torch.cuda.is_available():
+        old_gpu = torch.cuda.get_device_properties(0).major < 7
+        # only use Flash Attention on Ampere (8.0) or newer GPUs
+        use_flash_attn = torch.cuda.get_device_properties(0).major >= 8 and platform.system() == 'Linux'
+        if not use_flash_attn:
+            warnings.warn(
+                "Flash Attention is disabled as it requires a GPU with Ampere (8.0) CUDA capability.",
+                category=UserWarning,
+                stacklevel=2,
+            )
+        # keep math kernel for PyTorch versions before 2.2 (Flash Attention v2 is only
+        # available on PyTorch 2.2+, while Flash Attention v1 cannot handle all cases)
+        pytorch_version = tuple(int(v) for v in torch.__version__.split(".")[:2])
+        if pytorch_version < (2, 2):
+            warnings.warn(
+                f"You are using PyTorch {torch.__version__} without Flash Attention v2 support. "
+                "Consider upgrading to PyTorch 2.2+ for Flash Attention v2 (which could be faster).",
+                category=UserWarning,
+                stacklevel=2,
+            )
+        math_kernel_on = pytorch_version < (2, 2) or not use_flash_attn
+    else:
+        old_gpu = True
+        use_flash_attn = False
+        math_kernel_on = True
+
+    return old_gpu, use_flash_attn, math_kernel_on
+
+OLD_GPU, USE_FLASH_ATTN, MATH_KERNEL_ON = get_sdpa_settings()
+if USE_FLASH_ATTN:
+    backends.append(SDPBackend.FLASH_ATTENTION)
+if MATH_KERNEL_ON:
+    backends.append(SDPBackend.MATH)
+if OLD_GPU or not USE_FLASH_ATTN:
+    backends.append(SDPBackend.EFFICIENT_ATTENTION)
 
 def remove_all_hooks(model: torch.nn.Module) -> None:
     for child in model.children():
@@ -167,7 +206,9 @@ class Reference(Operator):
         q, k, v = map(lambda t: rearrange(t, "b n (h d) -> b h n d", h=h), (q, k, v))
         # Attention
         N = q.shape[-2]
-        with sdp_kernel(**{"enable_math": True, "enable_flash": True, "enable_mem_efficient": True}):
+        if not MATH_KERNEL_ON and OLD_GPU:
+            backends.append(SDPBackend.MATH)
+        with sdpa_kernel(backends):
             if layer_ind > 12 or self.mode == 'normal':
                 attn_bias = None
             else:
@@ -177,9 +218,7 @@ class Reference(Operator):
                 amplify = amplify.log()
                 attn_bias[:, :, :, :N] = amplify[:, :, :, [0]]
                 attn_bias[:, :, :, N:] = amplify[:, :, :, [1]]
-            out = F.scaled_dot_product_attention(
-                q, k, v, attn_mask=attn_bias,
-            )
+            out = F.scaled_dot_product_attention(q, k, v, attn_mask=attn_bias)
         del q, k, v
 
         out = rearrange(out, "b h n d -> b n (h d)", h=h)

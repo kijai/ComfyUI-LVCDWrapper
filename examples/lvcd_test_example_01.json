@@ -1,0 +1,1119 @@
+{
+  "last_node_id": 57,
+  "last_link_id": 130,
+  "nodes": [
+    {
+      "id": 27,
+      "type": "GetImageRangeFromBatch",
+      "pos": {
+        "0": -646,
+        "1": 90
+      },
+      "size": {
+        "0": 428.4000244140625,
+        "1": 102
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 118
+        },
+        {
+          "name": "masks",
+          "type": "MASK",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            120
+          ],
+          "slot_index": 0,
+          "shape": 3
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "GetImageRangeFromBatch"
+      },
+      "widgets_values": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": 51,
+      "type": "Note",
+      "pos": {
+        "0": -633,
+        "1": -25
+      },
+      "size": {
+        "0": 390.94049072265625,
+        "1": 66.49737548828125
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "Get first frame as the color reference for testing"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 26,
+      "type": "LineArtPreprocessor",
+      "pos": {
+        "0": -649,
+        "1": 366
+      },
+      "size": {
+        "0": 315,
+        "1": 82
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 119
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            85
+          ],
+          "slot_index": 0,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LineArtPreprocessor"
+      },
+      "widgets_values": [
+        "disable",
+        512
+      ]
+    },
+    {
+      "id": 52,
+      "type": "Note",
+      "pos": {
+        "0": -652,
+        "1": 500
+      },
+      "size": {
+        "0": 340.9259338378906,
+        "1": 58
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "Get lineart for testing"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 14,
+      "type": "ImageResizeKJ",
+      "pos": {
+        "0": -96,
+        "1": 92
+      },
+      "size": {
+        "0": 315,
+        "1": 266
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 120
+        },
+        {
+          "name": "get_image_size",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "width_input",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "width_input"
+          }
+        },
+        {
+          "name": "height_input",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "height_input"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            50,
+            79,
+            87
+          ],
+          "slot_index": 0,
+          "shape": 3
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageResizeKJ"
+      },
+      "widgets_values": [
+        576,
+        576,
+        "lanczos",
+        true,
+        64,
+        0,
+        0,
+        "disabled"
+      ]
+    },
+    {
+      "id": 2,
+      "type": "LoadLVCDModel",
+      "pos": {
+        "0": -101,
+        "1": -307
+      },
+      "size": {
+        "0": 315,
+        "1": 106
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "LVCD_pipe",
+          "type": "LVCDPIPE",
+          "links": [
+            109
+          ],
+          "slot_index": 0,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadLVCDModel"
+      },
+      "widgets_values": [
+        "svd-fp16.safetensors",
+        false,
+        "fp16"
+      ]
+    },
+    {
+      "id": 21,
+      "type": "ImageConcatMulti",
+      "pos": {
+        "0": 1603,
+        "1": -313
+      },
+      "size": {
+        "0": 210,
+        "1": 170
+      },
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image_1",
+          "type": "IMAGE",
+          "link": 63
+        },
+        {
+          "name": "image_2",
+          "type": "IMAGE",
+          "link": 69
+        },
+        {
+          "name": "image_3",
+          "type": "IMAGE",
+          "link": 66
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            60
+          ],
+          "slot_index": 0,
+          "shape": 3
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        3,
+        "right",
+        true,
+        null
+      ]
+    },
+    {
+      "id": 29,
+      "type": "RepeatImageBatch",
+      "pos": {
+        "0": 1374,
+        "1": -371
+      },
+      "size": {
+        "0": 315,
+        "1": 58
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 79
+        },
+        {
+          "name": "amount",
+          "type": "INT",
+          "link": 67,
+          "widget": {
+            "name": "amount"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            63
+          ],
+          "slot_index": 0,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "RepeatImageBatch"
+      },
+      "widgets_values": [
+        1
+      ]
+    },
+    {
+      "id": 25,
+      "type": "GetImageSizeAndCount",
+      "pos": {
+        "0": 288,
+        "1": 176
+      },
+      "size": {
+        "0": 277.20001220703125,
+        "1": 86
+      },
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 50
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            110
+          ],
+          "slot_index": 0,
+          "shape": 3
+        },
+        {
+          "name": "576 width",
+          "type": "INT",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "320 height",
+          "type": "INT",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "1 count",
+          "type": "INT",
+          "links": [],
+          "slot_index": 3,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "GetImageSizeAndCount"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 15,
+      "type": "ImageResizeKJ",
+      "pos": {
+        "0": -109,
+        "1": 444
+      },
+      "size": {
+        "0": 315,
+        "1": 266
+      },
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 85
+        },
+        {
+          "name": "get_image_size",
+          "type": "IMAGE",
+          "link": 87
+        },
+        {
+          "name": "width_input",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "width_input"
+          }
+        },
+        {
+          "name": "height_input",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "height_input"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            124,
+            129
+          ],
+          "slot_index": 0,
+          "shape": 3
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageResizeKJ"
+      },
+      "widgets_values": [
+        576,
+        576,
+        "lanczos",
+        false,
+        64,
+        0,
+        0,
+        "disabled"
+      ]
+    },
+    {
+      "id": 57,
+      "type": "GetImageSizeAndCount",
+      "pos": {
+        "0": 304.9486389160156,
+        "1": 411.9718017578125
+      },
+      "size": {
+        "0": 277.20001220703125,
+        "1": 86
+      },
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 129
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            130
+          ],
+          "slot_index": 0,
+          "shape": 3
+        },
+        {
+          "name": "576 width",
+          "type": "INT",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "320 height",
+          "type": "INT",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "75 count",
+          "type": "INT",
+          "links": [],
+          "slot_index": 3,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "GetImageSizeAndCount"
+      }
+    },
+    {
+      "id": 50,
+      "type": "VHS_LoadVideo",
+      "pos": {
+        "0": -965,
+        "1": 173
+      },
+      "size": [
+        247.455078125,
+        402.36393229166663
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            118,
+            119
+          ],
+          "slot_index": 0,
+          "shape": 3
+        },
+        {
+          "name": "frame_count",
+          "type": "INT",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "video_info",
+          "type": "VHS_VIDEOINFO",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_LoadVideo"
+      },
+      "widgets_values": {
+        "video": "sample_1.mp4",
+        "force_rate": 0,
+        "force_size": "Disabled",
+        "custom_width": 512,
+        "custom_height": 512,
+        "frame_load_cap": 0,
+        "skip_first_frames": 0,
+        "select_every_nth": 1,
+        "choose video to upload": "image",
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "frame_load_cap": 0,
+            "skip_first_frames": 0,
+            "force_rate": 0,
+            "filename": "sample_1.mp4",
+            "type": "input",
+            "format": "video/mp4",
+            "select_every_nth": 1
+          },
+          "muted": false
+        }
+      }
+    },
+    {
+      "id": 48,
+      "type": "LVCDDecoder",
+      "pos": {
+        "0": 1047,
+        "1": 188
+      },
+      "size": {
+        "0": 315,
+        "1": 126
+      },
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "LVCD_pipe",
+          "type": "LVCDPIPE",
+          "link": 114
+        },
+        {
+          "name": "samples",
+          "type": "SVDSAMPLES",
+          "link": 115
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            116
+          ],
+          "slot_index": 0,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LVCDDecoder"
+      },
+      "widgets_values": [
+        2,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 47,
+      "type": "LVCDSampler",
+      "pos": {
+        "0": 654,
+        "1": 153
+      },
+      "size": {
+        "0": 330.24658203125,
+        "1": 290.5760192871094
+      },
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "LVCD_pipe",
+          "type": "LVCDPIPE",
+          "link": 109
+        },
+        {
+          "name": "ref_images",
+          "type": "IMAGE",
+          "link": 110
+        },
+        {
+          "name": "sketch_images",
+          "type": "IMAGE",
+          "link": 130
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LVCD_pipe",
+          "type": "LVCDPIPE",
+          "links": [
+            114
+          ],
+          "slot_index": 0,
+          "shape": 3
+        },
+        {
+          "name": "samples",
+          "type": "SVDSAMPLES",
+          "links": [
+            115
+          ],
+          "slot_index": 1,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LVCDSampler"
+      },
+      "widgets_values": [
+        19,
+        25,
+        6,
+        160,
+        0.02,
+        4,
+        25,
+        127,
+        "fixed"
+      ]
+    },
+    {
+      "id": 32,
+      "type": "GetImageRangeFromBatch",
+      "pos": {
+        "0": 1274,
+        "1": -264
+      },
+      "size": {
+        "0": 428.4000244140625,
+        "1": 102
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 124
+        },
+        {
+          "name": "masks",
+          "type": "MASK",
+          "link": null
+        },
+        {
+          "name": "num_frames",
+          "type": "INT",
+          "link": 126,
+          "widget": {
+            "name": "num_frames"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            69
+          ],
+          "slot_index": 0,
+          "shape": 3
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "GetImageRangeFromBatch"
+      },
+      "widgets_values": [
+        0,
+        15
+      ]
+    },
+    {
+      "id": 31,
+      "type": "GetImageSizeAndCount",
+      "pos": {
+        "0": 1404,
+        "1": 180
+      },
+      "size": {
+        "0": 277.20001220703125,
+        "1": 86
+      },
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 116
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            66
+          ],
+          "slot_index": 0,
+          "shape": 3
+        },
+        {
+          "name": "576 width",
+          "type": "INT",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "320 height",
+          "type": "INT",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "75 count",
+          "type": "INT",
+          "links": [
+            67,
+            126
+          ],
+          "slot_index": 3,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "GetImageSizeAndCount"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 28,
+      "type": "VHS_VideoCombine",
+      "pos": {
+        "0": 1898,
+        "1": -312
+      },
+      "size": [
+        1320.2227783203125,
+        564.781995985243
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 60
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_VideoCombine"
+      },
+      "widgets_values": {
+        "frame_rate": 8,
+        "loop_count": 0,
+        "filename_prefix": "LVCD_results",
+        "format": "video/h264-mp4",
+        "pix_fmt": "yuv420p",
+        "crf": 19,
+        "save_metadata": true,
+        "pingpong": false,
+        "save_output": false,
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "filename": "AnimateDiff_00002.mp4",
+            "subfolder": "",
+            "type": "temp",
+            "format": "video/h264-mp4",
+            "frame_rate": 8
+          },
+          "muted": false
+        }
+      }
+    }
+  ],
+  "links": [
+    [
+      50,
+      14,
+      0,
+      25,
+      0,
+      "IMAGE"
+    ],
+    [
+      60,
+      21,
+      0,
+      28,
+      0,
+      "IMAGE"
+    ],
+    [
+      63,
+      29,
+      0,
+      21,
+      0,
+      "IMAGE"
+    ],
+    [
+      66,
+      31,
+      0,
+      21,
+      2,
+      "IMAGE"
+    ],
+    [
+      67,
+      31,
+      3,
+      29,
+      1,
+      "INT"
+    ],
+    [
+      69,
+      32,
+      0,
+      21,
+      1,
+      "IMAGE"
+    ],
+    [
+      79,
+      14,
+      0,
+      29,
+      0,
+      "IMAGE"
+    ],
+    [
+      85,
+      26,
+      0,
+      15,
+      0,
+      "IMAGE"
+    ],
+    [
+      87,
+      14,
+      0,
+      15,
+      1,
+      "IMAGE"
+    ],
+    [
+      109,
+      2,
+      0,
+      47,
+      0,
+      "LVCDPIPE"
+    ],
+    [
+      110,
+      25,
+      0,
+      47,
+      1,
+      "IMAGE"
+    ],
+    [
+      114,
+      47,
+      0,
+      48,
+      0,
+      "LVCDPIPE"
+    ],
+    [
+      115,
+      47,
+      1,
+      48,
+      1,
+      "SVDSAMPLES"
+    ],
+    [
+      116,
+      48,
+      0,
+      31,
+      0,
+      "IMAGE"
+    ],
+    [
+      118,
+      50,
+      0,
+      27,
+      0,
+      "IMAGE"
+    ],
+    [
+      119,
+      50,
+      0,
+      26,
+      0,
+      "IMAGE"
+    ],
+    [
+      120,
+      27,
+      0,
+      14,
+      0,
+      "IMAGE"
+    ],
+    [
+      124,
+      15,
+      0,
+      32,
+      0,
+      "IMAGE"
+    ],
+    [
+      126,
+      31,
+      3,
+      32,
+      2,
+      "INT"
+    ],
+    [
+      129,
+      15,
+      0,
+      57,
+      0,
+      "IMAGE"
+    ],
+    [
+      130,
+      57,
+      0,
+      47,
+      2,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.5209868481924987,
+      "offset": [
+        1076.4435159364998,
+        504.45723998032855
+      ]
+    }
+  },
+  "version": 0.4
+}
