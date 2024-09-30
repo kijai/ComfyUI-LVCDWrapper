@@ -37,7 +37,6 @@ class LoadLVCDModel:
     def loadmodel(self, model, precision, use_xformers):
         
         device = mm.get_torch_device()
-        print(device)
         offload_device = mm.unet_offload_device()
         dtype = {"bf16": torch.bfloat16, "fp16": torch.float16, "fp32": torch.float32}[precision]
         mm.soft_empty_cache()
@@ -60,7 +59,6 @@ class LoadLVCDModel:
         config = OmegaConf.load(config_path)
         config.model.params.drop_first_stage_model = False
         config.model.params.init_from_unet = False
-        print(config.model.params.conditioner_config.params.emb_models[0])
 
         if use_xformers:
             config.model.params.network_config.params.spatial_transformer_attn_type = 'softmax-xformers'
@@ -97,7 +95,7 @@ class LVCDSampler:
                 "LVCD_pipe": ("LVCDPIPE",),
                 "ref_images": ("IMAGE",),
                 "sketch_images": ("IMAGE",),
-                "num_frames": ("INT", {"default": 19, "min": 1, "max": 100, "step": 1}),
+                "num_frames": ("INT", {"default": 19, "min": 15, "max": 100, "step": 1}),
                 "num_steps": ("INT", {"default": 25, "min": 1, "max": 100, "step": 1}),
                 "fps_id": ("INT", {"default": 6, "min": 1, "max": 100, "step": 1}),
                 "motion_bucket_id": ("INT", {"default": 160, "min": 0, "max": 1000, "step": 1}),
