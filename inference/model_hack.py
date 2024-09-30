@@ -37,12 +37,11 @@ def get_sdpa_settings():
     return old_gpu, use_flash_attn, math_kernel_on
 
 OLD_GPU, USE_FLASH_ATTN, MATH_KERNEL_ON = get_sdpa_settings()
+backends.append(SDPBackend.EFFICIENT_ATTENTION)
 if USE_FLASH_ATTN:
     backends.append(SDPBackend.FLASH_ATTENTION)
 if MATH_KERNEL_ON:
     backends.append(SDPBackend.MATH)
-if OLD_GPU or not USE_FLASH_ATTN:
-    backends.append(SDPBackend.EFFICIENT_ATTENTION)
 
 def remove_all_hooks(model: torch.nn.Module) -> None:
     for child in model.children():
@@ -206,8 +205,6 @@ class Reference(Operator):
         q, k, v = map(lambda t: rearrange(t, "b n (h d) -> b h n d", h=h), (q, k, v))
         # Attention
         N = q.shape[-2]
-        if not MATH_KERNEL_ON and OLD_GPU:
-            backends.append(SDPBackend.MATH)
         with sdpa_kernel(backends):
             if layer_ind > 12 or self.mode == 'normal':
                 attn_bias = None
