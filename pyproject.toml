@@ -1,0 +1,15 @@
+[project]
+name = "comfyui-lvcdwrapper"
+description = "Original repo: [a/https://github.com/luckyhzt/LVCD](https://github.com/luckyhzt/LVCD)"
+version = "1.0.0"
+license = {file = "LICENSE"}
+dependencies = ["omegaconf>=2.3.0", "clip @ git+https://github.com/openai/CLIP.git", "open-clip-torch>=2.20.0", "pytorch-lightning>=2.0.1", "timm>=0.9.2"]
+
+[project.urls]
+Repository = "https://github.com/kijai/ComfyUI-LVCDWrapper"
+#  Used by Comfy Registry https://comfyregistry.org
+
+[tool.comfy]
+PublisherId = ""
+DisplayName = "ComfyUI-LVCDWrapper"
+Icon = ""
